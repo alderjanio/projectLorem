@@ -44,6 +44,10 @@
                       </table>
         </div>
     </div>
+    <!--modal Alert-->
+    <div id="warningDialog" title="Alerta">
+
+    </div>
     <!-- Modal -->
     <div id="projectDialog" title="Cadastro">
         <form method="post" id="formProject">
@@ -88,13 +92,45 @@
 		autoOpen:false,
 		width:450
 	    });
+        $("#warningDialog").dialog({
+		autoOpen:false,
+		width:450
+	    });
+       
         $('#btnAdd').click(function(){
            $('#formProject')[0].reset();
            $("#projectDialog").dialog('open');
        });
+
         $("#formProject").submit(function(e){
             e.preventDefault();
-            console.log($(this).serialize())
+                var nameProject = $("#nameProject").val();
+                var dataInicio = $("#dataInicio").val();
+                var DataTermino = $("#DataTermino").val();
+                var valorProject = $("#valorProject").val();
+                var nameRisco = $("#nameRisco").val();
+                var nameParticipantes = $("#nameParticipantes").val();
+              
+              if (nameProject == '' || dataInicio == '' || DataTermino == '' || valorProject == '' || nameRisco == '' || nameParticipantes == '' ){
+                $("#warningDialog").html('Todos os campos devem sem preenchidos')
+                $("#warningDialog").dialog('open')
+                return;
+              }
+
+                var url = "controller/controller.php";
+                var action = "insert";
+
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    data:{nameProject,dataInicio,DataTermino,valorProject,nameRisco,nameParticipantes,action},
+                    success:function(response){
+                        console.log(response)
+                        $("#projectDialog").dialog('close');
+
+
+                    }
+                })
         })
     
     })
