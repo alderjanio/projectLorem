@@ -45,6 +45,10 @@
     </div>
     <!--modal Alert-->
     <div id="warningDialog" title="Alerta">
+        Tem Certeze que quer deletar ?
+        <br/>
+        <button type="button" name="confirmaDel" id="confirmaDel" value="yes" class="btn btn-danger btn-xl">Sim</button>
+
 
     </div>
     <!-- Modal -->
@@ -86,13 +90,36 @@
         </form>
     </div>
 <script>
+    function confirmadel(params) {
+        $("#confirmaDel").attr('value',params)
+        $("#warningDialog").dialog('open');
+    }
+    $("#confirmaDel").on('click',function(){
+        var url = "controller/controller.php";
+        var action = "del";
+        var id = $("#confirmaDel").val();
+        $.ajax({
+            url:url,
+            type:"post",
+            data:{action:action,id},
+            success:function(response){
+                populate();
+                $("#warningDialog").dialog('close');
+
+
+            }
+        })
+    })
+        
+        
+   
 
     function populate() {
         var url = "controller/controller.php";
         var action = "list";
         var showTable = document.getElementById("tableProject");
         showTable.innerHTML = "";
-        // showTable = "";
+     
         $.ajax({
             url:url,
             type:"post",
@@ -110,7 +137,7 @@
                         <td>${v[5]}</td>
                         <td>${v[6]}</td>
                         <td> 
-                        <button type="button" name="btnDel" id="btnDel" class="btn btn-danger btn-xl">Delete</button>
+                        <button type="button" name="btnDel" onclick="confirmadel(${v[0]})" id="btnDel" class="btn btn-danger btn-xl">Delete</button>
                         <button type="button" name="btnEdit" id="btnEdit" class="btn btn-primary btn-xl">Edite</button>
                         </td>
                     </tr>

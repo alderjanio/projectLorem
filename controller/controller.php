@@ -25,6 +25,10 @@ switch ($_POST['action']) {
   
     $projeto->list();
     break;
+
+    case 'del':
+    $id = $_POST['id'];
+    $projeto->funcdelete($id);
     default:
         
         break;

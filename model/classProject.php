@@ -30,6 +30,12 @@ class ClassProject extends ClassConnection{
         echo json_encode($res);
    
     }
+    public function funcdelete($id)
+    {
+      $sql = "DELETE FROM tblprojeto WHERE id=$id";
+      $list = $this->connectDB()->prepare($sql);
+      $list->execute();
+    }
 
 }
 ?>
