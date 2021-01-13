@@ -30,6 +30,9 @@ switch ($_POST['action']) {
     $id = $_POST['id'];
     $projeto->funcdelete($id);
     default:
+    case 'update':
+    $id = $_POST['id'];
+    $projeto->funcbusca($id);
         
         break;
 }

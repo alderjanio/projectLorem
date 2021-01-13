@@ -90,6 +90,21 @@
         </form>
     </div>
 <script>
+    function atualizarProjeto(params) {
+        var url = "controller/controller.php";
+        var action = "update";
+        var id = params;
+        $.ajax({
+            url:url,
+            type:"post",
+            data:{action:action,id},
+            success:function(response){
+               console.log(response)
+
+
+            }
+        })
+    }
     function confirmadel(params) {
         $("#confirmaDel").attr('value',params)
         $("#warningDialog").dialog('open');
@@ -138,7 +153,7 @@
                         <td>${v[6]}</td>
                         <td> 
                         <button type="button" name="btnDel" onclick="confirmadel(${v[0]})" id="btnDel" class="btn btn-danger btn-xl">Delete</button>
-                        <button type="button" name="btnEdit" id="btnEdit" class="btn btn-primary btn-xl">Edite</button>
+                        <button type="button" name="btnEdit" onclick="atualizarProjeto(${v[0]})" id="btnEdit" class="btn btn-primary btn-xl">Edite</button>
                         </td>
                     </tr>
                     

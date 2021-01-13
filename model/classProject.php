@@ -36,6 +36,15 @@ class ClassProject extends ClassConnection{
       $list = $this->connectDB()->prepare($sql);
       $list->execute();
     }
+    public function funcbusca($id)
+    {
+        $sql = "SELECT * FROM tblprojeto WHERE id=$id";
+        $list = $this->connectDB()->prepare($sql);
+        $list->execute();
+        $res = $list->fetchAll();
+        echo json_encode($res);
+   
+    }
 
 }
 ?>
