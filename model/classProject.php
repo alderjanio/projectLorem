@@ -7,10 +7,10 @@ class ClassProject extends ClassConnection{
     public function addProjects($nameProject,$dataInicio,$DataTermino,$valorProject,$nameRisco,$nameParticipantes)
     {
         var_dump($nameProject,$dataInicio,$DataTermino,$valorProject,$nameRisco,$nameParticipantes);
-       
-        $sql = "INSERT INTO tbl_project VALUES (null,?,?,?,?,?,?)";
+     
+        $sql = "INSERT INTO tblprojeto VALUES (null,?,?,?,?,?,?)";
         $add = $this->connectDB()->prepare($sql);
-        $add->bindValue(1, $nameProject);
+        $add->bindValue(1, $nameProject) ;
         $add->bindValue(2, $dataInicio);
         $add->bindValue(3, $DataTermino);
         $add->bindValue(4, $valorProject);
@@ -20,6 +20,15 @@ class ClassProject extends ClassConnection{
         $add->execute();
   
     echo json_encode('ok');
+    }
+    public function list()
+    {
+        $sql = "SELECT * FROM tblprojeto";
+        $list = $this->connectDB()->prepare($sql);
+        $list->execute();
+        $res = $list->fetchAll();
+        echo json_encode($res);
+   
     }
 
 }

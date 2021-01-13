@@ -21,12 +21,10 @@
         <div align="right" style="margin-bottom:5px;">
         <button type="button" name="btnAdd" id="btnAdd" class="btn btn-success btn-xl">Add</button>
         </div>
+         <!-- Tabela -->
         <div class="table-responsive" id="user_data">
             
-        </div>
-        <br />
-        <!-- Tabela -->
-        <div class="content">
+
                 <table class="table">
                         <thead>
                           <tr>        
@@ -36,6 +34,7 @@
                             <th scope="col">Valor</th>
                             <th scope="col">Risco</th>
                             <th scope="col">Participantes</th>
+                            <th scope="col">Ação</th>
                           </tr>
                         </thead>
                         <tbody id="tableProject">
@@ -87,6 +86,43 @@
         </form>
     </div>
 <script>
+
+    function populate() {
+        var url = "controller/controller.php";
+        var action = "list";
+        var showTable = document.getElementById("tableProject");
+        showTable.innerHTML = "";
+        // showTable = "";
+        $.ajax({
+            url:url,
+            type:"post",
+            data:{action:action},
+            success:function(response){
+               
+                $.each(JSON.parse(response),function(k,v){
+                    
+                    showTable.innerHTML +=`
+                    <tr>
+                        <td>${v[1]}</td>
+                        <td>${v[2]}</td>
+                        <td>${v[3]}</td>
+                        <td>${v[4]}</td>
+                        <td>${v[5]}</td>
+                        <td>${v[6]}</td>
+                        <td> 
+                        <button type="button" name="btnDel" id="btnDel" class="btn btn-danger btn-xl">Delete</button>
+                        <button type="button" name="btnEdit" id="btnEdit" class="btn btn-primary btn-xl">Edite</button>
+                        </td>
+                    </tr>
+                    
+                    `;
+
+                })
+
+            }
+
+        })
+    }
     $(document).ready(function(){
         $("#projectDialog").dialog({
 		autoOpen:false,
@@ -101,7 +137,7 @@
            $('#formProject')[0].reset();
            $("#projectDialog").dialog('open');
        });
-
+       populate();
         $("#formProject").submit(function(e){
             e.preventDefault();
                 var nameProject = $("#nameProject").val();
@@ -127,6 +163,7 @@
                     success:function(response){
                         console.log(response)
                         $("#projectDialog").dialog('close');
+                        populate();
 
 
                     }
