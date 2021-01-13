@@ -1,3 +1,5 @@
+<img src="imagens\projeto.png">
+
 ## Sobre 
 
 Este projeto é a prova solicitada no processo seletivo da FPFtech, foi proposto um sistema de Cadastro de projetos e apos os cadastro, o usuário pode ver os cadastros e simular inverstimentos, dependendo do projeto escolhido haverá um retorno com previsão de lucro baseado nos riscos
@@ -10,6 +12,7 @@ Bootstrap
 javascript
 
 ## Funcionalidades
+<img src="imagens\popups.png">
 
 Todos os serviços estão na primeira página
 
