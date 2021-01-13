@@ -44,15 +44,27 @@
         </div>
     </div>
     <!--modal Alert-->
+    <div id="simulaDialog" title="Alerta">
+        <h4>Informe o valor de Investimento</h4>
+        <input type="text" class="form-controll" id="textInvestimento">
+        
+        
+        <button type="submit" class="btn btn-primary" id="btninvertimento">Simular</button>
+    </div>
     <div id="warningDialog" title="Alerta">
-        Tem Certeze que quer deletar ?
-        <br/>
-        <button type="button" name="confirmaDel" id="confirmaDel" value="yes" class="btn btn-danger btn-xl">Sim</button>
+        
 
 
     </div>
+    <div id="deleteDialog" title="Alerta">
+            Tem Certeze que quer deletar ?
+            <br/>
+            <button type="button" name="confirmaDel" id="confirmaDel" value="yes" class="btn btn-danger btn-xl">Sim</button>
+    
+    
+        </div>
     <!-- Modal -->
-    <div id="projectDialog" title="Cadastro">
+    <div id="projectDialog" >
         <form method="post" id="formProject">
             <div class="form-group mb-3">
                 <label for="nameProject" class="form-label">Nome do Projeto </label>
@@ -77,7 +89,14 @@
              
             <div class="form-group mb-3 col-sm-6">
                 <label for="nameRisco" class="form-label">Risco </label>
-                <input type="text" class="form-control" id="nameRisco">
+                <select name="nameRisco" id="nameRisco" class="form-control" >
+
+                    <option value="0">Risco Baixo</option>
+                    <option value="1">Risco intermediário </option>
+                    <option value="2">Risco Alto </option>
+
+                </select>
+                
             </div>
         </div>
             <div class="form-group sm-3">
@@ -85,14 +104,21 @@
                 <input type="text" class="form-control" id="nameParticipantes" placeholder="Informe os participantes separados por ," >
             </div>
             <div class="form-group sm-3">
+            <input type="hidden" id="hideid">
             <input  type="submit" class="btn btn-primary" id="btnEnviar" value="Adicionar">
+            <button  type="submit" class="btn btn-primary" id="btnAtualizar" > Atualiza </button>
+            
         </div>
         </form>
     </div>
+    <script src="lib/maskMoney.min.js" type="text/javascript"></script>
 <script>
+    function simularInvestimento(params) {
+        $("#simulaDialog").dialog('open');
+    }
     function atualizarProjeto(params) {
         var url = "controller/controller.php";
-        var action = "update";
+        var action = "buscaid";
         var id = params;
         $.ajax({
             url:url,
@@ -100,6 +126,22 @@
             data:{action:action,id},
             success:function(response){
                console.log(response)
+               $.each(JSON.parse(response),function(k,v){
+               $("#nameProject").val(v[1]);
+               $("#dataInicio").val(v[2]);
+               $("#DataTermino").val(v[3]);
+               $("#valorProject").val(v[4]);
+               $("#nameRisco").val(v[5]);
+               $("#nameParticipantes").val(v[6]);
+               $("#hideid").val(v[0])
+               $("#btnEnviar").hide();
+               $("#btnAtualizar").show();
+               
+               $("#projectDialog").attr('title','Atualizar');
+               $("#projectDialog").dialog('open');
+
+
+               })
 
 
             }
@@ -107,7 +149,7 @@
     }
     function confirmadel(params) {
         $("#confirmaDel").attr('value',params)
-        $("#warningDialog").dialog('open');
+        $("#deleteDialog").dialog('open');
     }
     $("#confirmaDel").on('click',function(){
         var url = "controller/controller.php";
@@ -119,7 +161,7 @@
             data:{action:action,id},
             success:function(response){
                 populate();
-                $("#warningDialog").dialog('close');
+                $("#deleteDialog").dialog('close');
 
 
             }
@@ -154,6 +196,7 @@
                         <td> 
                         <button type="button" name="btnDel" onclick="confirmadel(${v[0]})" id="btnDel" class="btn btn-danger btn-xl">Delete</button>
                         <button type="button" name="btnEdit" onclick="atualizarProjeto(${v[0]})" id="btnEdit" class="btn btn-primary btn-xl">Edite</button>
+                        <button  typy="button" onclick="simularInvestimento(${v[0]})" class="btn btn-primary" id="btnSimular">Simular</button>
                         </td>
                     </tr>
                     
@@ -166,22 +209,45 @@
         })
     }
     $(document).ready(function(){
+        $("#btnAtualizar").hide();
+
         $("#projectDialog").dialog({
 		autoOpen:false,
 		width:450
-	    });
+        });
+        
         $("#warningDialog").dialog({
 		autoOpen:false,
 		width:450
-	    });
+        });
+        
+        $("#deleteDialog").dialog({
+		autoOpen:false,
+		width:350
+        })
+        
+        $("#simulaDialog").dialog({
+		autoOpen:false,
+		width:450
+        });
        
+
         $('#btnAdd').click(function(){
+            $("#btnAtualizar").hide();
+            $("#btnEnviar").show()
            $('#formProject')[0].reset();
            $("#projectDialog").dialog('open');
+           
        });
+       
+       $("#valorProject").maskMoney({thousands:"", decimal:",", symbol:"R$", showSymbol:true, symbolStay:true});
+       $("#textInvestimento").maskMoney({thousands:"", decimal:",", symbol:"R$", showSymbol:true, symbolStay:true});
        populate();
-        $("#formProject").submit(function(e){
+
+        $("#btnEnviar").on('click',function(e){
             e.preventDefault();
+          
+            
                 var nameProject = $("#nameProject").val();
                 var dataInicio = $("#dataInicio").val();
                 var DataTermino = $("#DataTermino").val();
@@ -189,6 +255,9 @@
                 var nameRisco = $("#nameRisco").val();
                 var nameParticipantes = $("#nameParticipantes").val();
               
+                var valorProject = valorProject.split(',').join('.');
+            
+               
               if (nameProject == '' || dataInicio == '' || DataTermino == '' || valorProject == '' || nameRisco == '' || nameParticipantes == '' ){
                 $("#warningDialog").html('Todos os campos devem sem preenchidos')
                 $("#warningDialog").dialog('open')
@@ -213,6 +282,42 @@
         })
     
     })
+    $("#btnAtualizar").on('click',function(e){
+            e.preventDefault();
+          
+                var id = $("#hideid").val();
+                var nameProject = $("#nameProject").val();
+                var dataInicio = $("#dataInicio").val();
+                var DataTermino = $("#DataTermino").val();
+                var valorProject = $("#valorProject").val();
+                var nameRisco = $("#nameRisco").val();
+                var nameParticipantes = $("#nameParticipantes").val();
+
+                var valorProject = valorProject.split(',').join('.');
+              
+              if (nameProject == '' || dataInicio == '' || DataTermino == '' || valorProject == '' || nameRisco == '' || nameParticipantes == '' ){
+                $("#warningDialog").html('Todos os campos devem sem preenchidos')
+                $("#warningDialog").dialog('open')
+                return;
+              }
+
+                var url = "controller/controller.php";
+                var action = "atualizar";
+             
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    data:{id,nameProject,dataInicio,DataTermino,valorProject,nameRisco,nameParticipantes,action},
+                    success:function(response){
+                        console.log(response)
+                        $("#projectDialog").dialog('close');
+                        populate();
+
+
+                    }
+                })
+        })
+    
 
 </script>
 </body>

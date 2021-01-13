@@ -29,10 +29,32 @@ switch ($_POST['action']) {
     case 'del':
     $id = $_POST['id'];
     $projeto->funcdelete($id);
-    default:
-    case 'update':
+    break;
+
+
+    case 'buscaid':
     $id = $_POST['id'];
     $projeto->funcbusca($id);
+    break;
+
+    case 'atualizar':
+        var_dump($_REQUEST);
+    $id = $_POST['id'];
+    $nameProject = $_POST['nameProject']; 
+    $dataInicio  = $_POST['dataInicio'];
+    $DataTermino  = $_POST['DataTermino'];
+    $valorProject = $_POST['valorProject'];
+    $nameRisco = $_POST['nameRisco'];
+    $nameParticipantes = $_POST['nameParticipantes'];
+ 
+
+    $projeto->atualizar($id,$nameProject,$dataInicio,$DataTermino,$valorProject,$nameRisco,$nameParticipantes);
+    break;
+
+    default:
+   
+    
+
         
         break;
 }

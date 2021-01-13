@@ -45,6 +45,22 @@ class ClassProject extends ClassConnection{
         echo json_encode($res);
    
     }
+    public function atualizar($id,$nameProject,$dataInicio,$DataTermino,$valorProject,$nameRisco,$nameParticipantes)
+    {
+        $sql = "UPDATE tblprojeto SET projeto_nome=?, projeto_datainicio=?, projeto_datatermino=?, projeto_price=?, projeto_risco=?, projeto_participantes=? WHERE id=?";
+        $up = $this->connectDB()->prepare($sql);
+        $up->bindParam(1, $nameProject);
+        $up->bindParam(2, $dataInicio);
+        $up->bindParam(3, $DataTermino);
+        $up->bindParam(4, $valorProject);
+        $up->bindParam(5, $nameRisco);
+        $up->bindParam(6, $nameParticipantes);
+        $up->bindParam(7, $id);
+        $up->execute();
+     
+        echo json_encode($nameProject);
+   
+    }
 
 }
 ?>
